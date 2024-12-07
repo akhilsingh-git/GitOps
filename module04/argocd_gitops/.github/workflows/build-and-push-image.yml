@@ -10,19 +10,11 @@ on:
 
   push:
     branches:
-      - 'master'    # Trigger when changes are pushed to master branch
-      - 'release'   # Trigger when changes are pushed to release branch
+      - 'master'
+      - 'release'
     paths:
-      - 'module04/argocd_gitops/**'  # Only trigger if files in this directory are modified
-
-  # Optionally allow manual trigger via the GitHub UI
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to trigger the build from'
-        required: true
-        default: 'master'
-
+      - 'module04/argocd_gitops/**'
+      
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
