@@ -16,7 +16,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Trigger the build-and-push-image.yml workflow in module04/argocd_gitops
-        uses: peter-evans/workflow-dispatch@v1
+        uses: octokit/request-action@v2
         with:
-          workflow: 'module04/argocd_gitops/.github/workflows/build-and-push-image.yml'  # Path to the workflow
-          ref: ${{ github.sha }}  # Trigger the workflow on the latest commit
+          route: POST /repos/${{ github.repository }}/dispatches
+          data: |
+            {
+              "event_type": "trigger-build-and-push-image",
+              "client_payload": {
+                "ref": "${{ github.sha }}"
+              }
+            }
