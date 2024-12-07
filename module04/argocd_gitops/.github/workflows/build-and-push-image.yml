@@ -2,7 +2,7 @@ name: Build and Push Image for Module 04
 
 on:
   repository_dispatch:
-    types: [trigger-build-and-push-image]  # Ensure this matches the event_type from the trigger
+    types: [trigger-build-and-push-image]
 
 jobs:
   build-and-push:
@@ -35,4 +35,3 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: |
           docker push module04
-        
