@@ -4,6 +4,7 @@ on:
   repository_dispatch:
     types: [trigger-build-and-push-image]  # Listen for the custom event triggered by main.yml
 
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
