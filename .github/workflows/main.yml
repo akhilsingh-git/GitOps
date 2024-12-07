@@ -1,22 +1,22 @@
-name: Run Actions for Module 04 (Manual Trigger)
+name: Trigger Build and Push Image for Module 04
 
 on:
-  workflow_dispatch:
-    inputs:
-      folder:
-        description: 'Select folder to run'
-        required: true
-        type: choice
-        options:
-          - 'module04'
+  push:
+    paths:
+      - 'module04/argocd_gitops/**'  # Trigger when files inside module04/argocd_gitops are modified
+  pull_request:
+    paths:
+      - 'module04/argocd_gitops/**'  # Trigger for pull requests affecting module04/argocd_gitops
 
 jobs:
-  run-module04:
+  trigger-build-push-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Run actions for module04
-        run: |
-          echo "Running actions for module04"
-          # Add module04-specific commands here
+
+      - name: Trigger the build-and-push-image.yml workflow in module04/argocd_gitops
+        uses: peter-evans/workflow-dispatch@v1
+        with:
+          workflow: 'module04/argocd_gitops/.github/workflows/build-and-push-image.yml'  # Path to the workflow
+          ref: ${{ github.sha }}  # Trigger the workflow on the latest commit
