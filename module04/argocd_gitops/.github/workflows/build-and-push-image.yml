@@ -2,42 +2,57 @@ name: Publish Docker image
 
 on:
   push:
-    branches: 
-      - 'master'     # Trigger for pushes to master branch
-      - 'release'    # Trigger for pushes to release branch
+    branches:
+      - 'master'    # Trigger when changes are pushed to master branch
+      - 'release'   # Trigger when changes are pushed to release branch
     paths:
-      - 'module04/argocd_gitops/**'  # Trigger when files in module04/argocd_gitops are changed
+      - 'module04/argocd_gitops/**'  # Only trigger if files in this directory are modified
+
+  # Optionally allow manual trigger via the GitHub UI
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to trigger the build from'
+        required: true
+        default: 'master'
 
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4  # Checkout the latest code
+      # Step 1: Checkout code
+      - name: Check out the repository
+        uses: actions/checkout@v4
 
+      # Step 2: Set up Docker Buildx for multi-platform builds
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2  # Set up Docker Buildx for building images
+        uses: docker/setup-buildx-action@v2
 
+      # Step 3: Cache Docker layers to speed up builds
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
-          path: /tmp/.buildx-cache  # Cache Docker layers to speed up builds
+          path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      # Step 4: Build Docker image
       - name: Build Docker image
         run: |
-          cd module04/argocd_gitops  # Navigate to the correct directory where Dockerfile is located
-          docker build -t module04 .  # Build the Docker image
+          cd module04/argocd_gitops  # Navigate to the directory containing the Dockerfile
+          docker build -t module04 .  # Build the Docker image using Dockerfile in this folder
 
+      # Step 5: Log in to Docker Hub
       - name: Log in to Docker Hub
-        uses: docker/login-action@v2  # Log in to Docker Hub
+        uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}  # Use your Docker Hub username
-          password: ${{ secrets.DOCKER_PASSWORD }}  # Use your Docker Hub password
+          username: ${{ secrets.DOCKER_USERNAME }}  # Docker Hub username stored in GitHub Secrets
+          password: ${{ secrets.DOCKER_PASSWORD }}  # Docker Hub password or token stored in GitHub Secrets
 
+      # Step 6: Push Docker image to Docker Hub
       - name: Push Docker image to Docker Hub
         run: |
           docker push module04  # Push the Docker image to Docker Hub
