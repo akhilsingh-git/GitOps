@@ -2,7 +2,7 @@ name: Build and Push Image for Module 04
 
 on:
   repository_dispatch:
-    types: [trigger-build-and-push-image]  # Listen for the custom event triggered by main.yml
+    types: [trigger-build-and-push-image]  # Ensure this matches the event_type from the trigger
 
 jobs:
   build-and-push:
