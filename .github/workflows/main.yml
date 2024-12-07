@@ -3,10 +3,10 @@ name: Trigger Build and Push Image for Module 04
 on:
   push:
     paths:
-      - 'module04/argocd_gitops/**'
+      - 'module04/argocd_gitops/**'  # Trigger when files inside module04/argocd_gitops are modified
   pull_request:
     paths:
-      - 'module04/argocd_gitops/**'
+      - 'module04/argocd_gitops/**'  # Trigger for pull requests affecting module04/argocd_gitops
 
 jobs:
   trigger-build-push-image:
@@ -16,9 +16,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Trigger the build-and-push-image.yml workflow in module04/argocd_gitops
-        uses: octokit/request-action@v2.x
+        uses: octokit/request-action@v2
         with:
-          route: POST /repos/akhilsingh-git/GitOps/dispatches
+          route: POST /repos/${{ github.repository }}/dispatches
           data: |
             {
               "event_type": "trigger-build-and-push-image",
@@ -26,4 +26,5 @@ jobs:
                 "ref": "e33791d190585499f8ee78b23fd0620aad8e4351"
               }
             }
-          token: ${{ secrets.GH_PAT }}  # Use Personal Access Token (PAT) with required scopes
+          # Ensure GITHUB_TOKEN is passed in the with block
+          token: ${{ secrets.GITHUB_TOKEN }}
