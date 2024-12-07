@@ -20,11 +20,11 @@ jobs:
         with:
           route: POST /repos/${{ github.repository }}/dispatches
           data: |
-            {
-              "event_type": "trigger-build-and-push-image",
-              "client_payload": {
-                "ref": "e33791d190585499f8ee78b23fd0620aad8e4351"
-              }
-            }
+                {
+                  "event_type": "trigger-build-and-push-image",
+                  "client_payload": {
+                  "ref": "e33791d190585499f8ee78b23fd0620aad8e4351"
+                }
+                }
           # Ensure GITHUB_TOKEN is passed in the with block
           token: ${{ secrets.GITHUB_TOKEN }}
