@@ -1,19 +1,18 @@
 name: Build and Push Image for Module 04
 
 on:
-  workflow_dispatch:  # Allows manual triggering from the UI or another workflow
+  workflow_dispatch:  # Allow the workflow to be triggered from another repository
     inputs:
       ref:
         description: 'Git reference to build from'
         required: true
-        default: 'master'
-
+        default: 'main'
   push:
     branches:
       - 'master'
       - 'release'
     paths:
-      - 'module04/argocd_gitops/.github/workflows/build-and-push-image.yml'
+      - 'module04/argocd_gitops/**'
 
 jobs:
   build-and-push:
@@ -35,7 +34,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd module04/argocd_gitops  # Navigate to the directory with Dockerfile
+          cd module04/argocd_gitops  # Navigate to the correct directory
           docker build -t module04 .
 
       - name: Log in to Docker Hub
