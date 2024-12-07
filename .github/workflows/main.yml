@@ -16,15 +16,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Trigger the build-and-push-image.yml workflow in module04/argocd_gitops
-        uses: octokit/request-action@v2.x
-        with:
-          route: POST /repos/${{ github.repository }}/dispatches
-          data: |
-                {
-                  "event_type": "trigger-build-and-push-image",
-                  "client_payload": {
-                  "ref": "e33791d190585499f8ee78b23fd0620aad8e4351"
-                }
-                }
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{"event_type": "trigger-build-and-push-image", "client_payload": {"ref": "${{ github.sha }}"}}' \
+            https://api.github.com/repos/${{ github.repository }}/dispatches
           # Ensure GITHUB_TOKEN is passed in the with block
           token: ${{ secrets.GITHUB_TOKEN }}
