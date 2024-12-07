@@ -2,7 +2,7 @@ name: Build and Push Image for Module 04
 
 on:
   repository_dispatch:
-    types: [trigger-build-and-push-image]
+    types: [trigger-build-and-push-image]  # Ensure this matches the event type in the upstream workflow
 
 jobs:
   build-and-push:
@@ -24,6 +24,7 @@ jobs:
 
       - name: Build Docker image
         run: |
+          cd module04/argocd_gitops  # Navigate to the correct directory
           docker build -t module04 .
 
       - name: Log in to Docker Hub
@@ -35,5 +36,3 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: |
           docker push module04
-
-          
