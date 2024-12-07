@@ -15,23 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-name: Trigger Build and Push Image for Module 04
-
-on:
-  push:
-    paths:
-      - 'module04/argocd_gitops/**'  # Trigger when files inside module04/argocd_gitops are modified
-  pull_request:
-    paths:
-      - 'module04/argocd_gitops/**'  # Trigger for pull requests affecting module04/argocd_gitops
-
-jobs:
-  trigger-build-push-image:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Trigger the build-and-push-image.yml workflow in module04/argocd_gitops
         run: |
           curl -X POST \
