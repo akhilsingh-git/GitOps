@@ -15,14 +15,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install GitHub CLI
-        run: |
-          curl -s https://cli.github.com/install.sh | bash
-
-      - name: Trigger the build-and-push-image.yml workflow using gh CLI
-        run: |
-          gh api repos/${{ github.repository }}/dispatches \
-            --method POST \
-            --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            --field event_type="trigger-build-and-push-image" \
-            --field client_payload='{"ref":"${{ github.sha }}"}'
+      - name: Trigger the build-and-push-image.yml workflow in module04/argocd_gitops
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/${{ github.repository }}/dispatches
+          data: |
+            {
+              "event_type": "trigger-build-and-push-image",
+              "client_payload": {
+                "ref": "${{ github.sha }}"
+              }
+            }
