@@ -1,6 +1,13 @@
-name: Publish Docker image
+name: Build and Push Image for Module 04
 
 on:
+  workflow_dispatch:  # Allows manual triggering from the UI or another workflow
+    inputs:
+      ref:
+        description: 'Git reference to build from'
+        required: true
+        default: 'master'
+
   push:
     branches:
       - 'master'    # Trigger when changes are pushed to master branch
