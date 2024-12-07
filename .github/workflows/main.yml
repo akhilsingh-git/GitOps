@@ -1,0 +1,30 @@
+name: Folder-specific Actions
+
+on:
+  push:
+    paths:
+      - 'module04/**'
+      - 'module05/**'
+  pull_request:
+    paths:
+      - 'module04/**'
+      - 'module05/**'
+
+jobs:
+  job-folder1:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.ref != 'main' || contains(github.event.head_commit.message, 'module04') # run if changes are in folder1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run tests for module04
+        run: echo "Running tests in module04"
+
+  job-folder2:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.ref != 'main' || contains(github.event.head_commit.message, 'module05') # run if changes are in folder2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run tests for module05
+        run: echo "Running tests in module05"
